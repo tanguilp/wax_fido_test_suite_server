@@ -1,27 +1,19 @@
 defmodule WaxFidoTestSuiteServer.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
 
   def start(_type, _args) do
-    # List all child processes to be supervised
     children = [
-      # Start the endpoint when the application starts
       WaxFidoTestSuiteServerWeb.Endpoint
-      # Starts a worker by calling: WaxFidoTestSuiteServer.Worker.start_link(arg)
-      # {WaxFidoTestSuiteServer.Worker, arg},
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
+    :ets.new(:session, [:named_table, :public])
+
     opts = [strategy: :one_for_one, name: WaxFidoTestSuiteServer.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
   def config_change(changed, _new, removed) do
     WaxFidoTestSuiteServerWeb.Endpoint.config_change(changed, removed)
     :ok

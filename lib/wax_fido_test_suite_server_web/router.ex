@@ -3,9 +3,11 @@ defmodule WaxFidoTestSuiteServerWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
+    plug Plug.Session, store: :ets, key: "sid", table: :session
   end
 
-  scope "/api", WaxFidoTestSuiteServerWeb do
-    pipe_through :api
+  scope "/" do
+    forward "/", WaxAPIREST.Plug
   end
 end
