@@ -36,6 +36,17 @@ Launch the executable (beware, it is **NOT** signed - you better run it inside a
 
 On the main screen, click on "FIDO2 Tests".
 
+Click on "DOWNLOAD SERVER METADATA" to load metadata. This is metadata used for testing and must
+be loaded in Wax instead of the production metadata loaded from the FIDO2 Web Service. To do so:
+- create the `/priv/fido2_metadata/` directory in this project
+- unzip the metadata archive
+- copy the JSON files into `/priv/fido2_metadata`
+- configure metadata loading from directory, for instance in `conf/dev/exs`:
+
+```elixir
+config :wax, :metadata_dir, :wax_fido_test_suite_server
+```
+
 Then, select "Server tests" on the right menu and set the "Server URL" to
 `http://localhost:4000`. Then click on "RUN".
 
@@ -46,8 +57,8 @@ One solution consists in installing a Windows VM and use the test suite from it:
 
 ### Download a Windows VM
 
-[https://developer.microsoft.com/en-us/windows/downloads/virtual-machines](Windows 10 VM)
-(licence last 90 days).
+[Windows 10 VM](https://developer.microsoft.com/en-us/windows/downloads/virtual-machines)
+(licence lasts 90 days).
 
 ### Install the test suite
 

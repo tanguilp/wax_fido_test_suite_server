@@ -1,6 +1,8 @@
 defmodule WaxFidoTestSuiteServerWeb.Router do
   use WaxFidoTestSuiteServerWeb, :router
 
+  alias WaxFidoTestSuiteServerWeb.UserKeyCallbackImpl
+
   pipeline :api do
     plug :accepts, ["json"]
 
@@ -8,6 +10,6 @@ defmodule WaxFidoTestSuiteServerWeb.Router do
   end
 
   scope "/" do
-    forward "/", WaxAPIREST.Plug
+    forward "/", WaxAPIREST.Plug, callback_module: UserKeyCallbackImpl
   end
 end

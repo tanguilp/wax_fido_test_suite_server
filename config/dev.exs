@@ -48,3 +48,5 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :wax, :origin, "http://localhost:4000"
+
+config :wax, :metadata_dir, :wax_fido_test_suite_server

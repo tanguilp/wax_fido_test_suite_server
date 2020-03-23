@@ -9,6 +9,7 @@ defmodule WaxFidoTestSuiteServer.Application do
     ]
 
     :ets.new(:session, [:named_table, :public])
+    :ets.new(:wax_fido_test_user_keys, [:named_table, :bag, :public])
 
     opts = [strategy: :one_for_one, name: WaxFidoTestSuiteServer.Supervisor]
     Supervisor.start_link(children, opts)
