@@ -1,12 +1,22 @@
 # WaxFidoTestSuiteServer
 
-WIP
+## Configuration
+
+### Enable TPM's test ID
+
+In the `Wax` library, in the `lib/wax/attestation_statement_format/tpm.ex` file, uncomment
+the following line:
 
 ```
-curl --header "Content-Type: application/json" --request POST --cookie "fido_test_suite=abcdef" --data '{"username":"johndoe@example.com","displayName":"John Doe","authenticatorSelection":{"residentKey":false,"authenticatorAttachment":"cross-platform","userVerification":"preferred"},"attestation":"direct"}' http://localhost:4000/attestation/options | jq
+  #++ ["id:FFFFF1D0"] # fake ID for conformance tool testing, uncomment only for testing
 ```
 
-## Configuring the origin
+The test suite uses a fake manufacturer ID in some TPM tests.
+
+One way to do it is:
+- to remove the `wax` directory in `_build`
+- to edit Wax's source code in the `deps` directory
+- recompile
 
 ### Setting `origin`
 
@@ -16,13 +26,7 @@ Don't forget to configure the origin. By default, in development environment, it
 config :wax, :origin, "http://localhost:4000"
 ```
 
-### Starting the test server
-
-```bash
-iex -S mix phx.server
-```
-
-will launch the server in development mode (environment is not important for our purpose).
+but host or port could change depending on your configuration.
 
 ### Downloading the test suite
 
@@ -30,7 +34,7 @@ It is not publicly available. See
 [https://fidoalliance.org/certification/functional-certification/conformance/](https://fidoalliance.org/certification/functional-certification/conformance/)
 to be granted access.
 
-### Testing
+### Configuring metadata
 
 Launch the executable (beware, it is **NOT** signed - you better run it inside a VM).
 
@@ -47,7 +51,17 @@ be loaded in Wax instead of the production metadata loaded from the FIDO2 Web Se
 config :wax, :metadata_dir, :wax_fido_test_suite_server
 ```
 
-Then, select "Server tests" on the right menu and set the "Server URL" to
+### Starting the test server
+
+```bash
+iex -S mix phx.server
+```
+
+will launch the server in development mode (environment is not important for our purpose).
+
+### Launch tests
+
+Then, select "Server tests" (except metadata) on the right menu and set the "Server URL" to
 `http://localhost:4000`. Then click on "RUN".
 
 ## Testing from a Linux host
@@ -87,4 +101,10 @@ It is however possible to redirect traffic with the following commands:
 netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=4000 connectaddress=192.168.100.97 connectport=4000
 
 netsh interface portproxy add v6tov4 listenaddress=::1 listenport=4000 connectaddress=192.168.100.97 connectport=4000
+```
+
+## Curl test command
+
+```
+curl --header "Content-Type: application/json" --request POST --cookie "fido_test_suite=abcdef" --data '{"username":"johndoe@example.com","displayName":"John Doe","authenticatorSelection":{"residentKey":false,"authenticatorAttachment":"cross-platform","userVerification":"preferred"},"attestation":"direct"}' http://localhost:4000/attestation/options | jq
 ```
