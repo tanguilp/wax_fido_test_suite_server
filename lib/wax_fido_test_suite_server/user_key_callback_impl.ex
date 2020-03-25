@@ -1,6 +1,4 @@
 defmodule WaxFidoTestSuiteServerWeb.UserKeyCallbackImpl do
-  alias WaxAPIREST.Types.ServerPublicKeyCredentialCreationOptionsRequest
-
   @behaviour WaxAPIREST.Callback
 
   @impl true
@@ -54,14 +52,7 @@ defmodule WaxFidoTestSuiteServerWeb.UserKeyCallbackImpl do
     |> Plug.Conn.get_session(:user_id)
   end
 
-  defp user_id(conn, request) do
+  defp user_id(_conn, request) do
     request.username
-    #case user_id(conn) do
-    #  user_id when is_binary(user_id) ->
-    #    user_id
-
-    #  nil ->
-    #    request.username
-    #end
   end
 end
