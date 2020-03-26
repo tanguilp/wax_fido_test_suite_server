@@ -12,6 +12,7 @@ defmodule WaxFidoTestSuiteServerWeb.Router do
   scope "/" do
     forward "/", WaxAPIREST.Plug,
       callback_module: UserKeyCallbackImpl,
-      pub_key_cred_params: [-39, -38, -37, -36, -35, -7]
+      pub_key_cred_params: [-39, -38, -37, -36, -35, -7],
+      silent_authentication_enabled: true
   end
 end

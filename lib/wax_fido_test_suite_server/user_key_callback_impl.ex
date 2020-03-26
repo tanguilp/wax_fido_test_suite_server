@@ -2,16 +2,16 @@ defmodule WaxFidoTestSuiteServerWeb.UserKeyCallbackImpl do
   @behaviour WaxAPIREST.Callback
 
   @impl true
-  def user_info(conn, request) do
-    %{id: user_id(conn, request)}
+  def user_info(conn) do
+    %{id: user_id(conn)}
   end
 
   @impl true
-  def put_challenge(conn, challenge, request) do
+  def put_challenge(conn, challenge) do
     conn
     |> Plug.Conn.fetch_session()
     |> Plug.Conn.put_session(:wax_api_rest_challenge, challenge)
-    |> Plug.Conn.put_session(:user_id, user_id(conn, request))
+    |> Plug.Conn.put_session(:user_id, user_id(conn))
   end
 
   @impl true
@@ -22,37 +22,44 @@ defmodule WaxFidoTestSuiteServerWeb.UserKeyCallbackImpl do
   end
 
   @impl true
-  def register_key(conn, key_id, authenticator_data, _attestation_result) do
+  def register_key(conn, credential_id, authenticator_data, _attestation_result) do
     true = :ets.insert(:wax_fido_test_user_keys, {
-      user_id(conn),
-      key_id,
-      authenticator_data.attested_credential_data.credential_public_key
+      {user_id(conn), credential_id},
+      authenticator_data.attested_credential_data.credential_public_key,
+      authenticator_data.sign_count
     })
 
     conn
   end
 
   @impl true
-  def user_keys(conn, request) do
-    :ets.lookup(:wax_fido_test_user_keys, user_id(conn, request))
-    |> Enum.reduce(
-      %{},
-      fn {_user_id, key_id, cose_key}, acc -> Map.put(acc, key_id, cose_key) end
+  def user_keys(conn) do
+    :ets.match_object(:wax_fido_test_user_keys, {{user_id(conn), :_}, :_, :_})
+    |> Enum.map(
+      fn {{_user_id, credential_id}, cose_key, sign_count} ->
+        {credential_id, %{cose_key: cose_key, sign_count: sign_count}}
+      end
     )
   end
 
   @impl true
-  def on_authentication_success(conn, _authenticator_metadata) do
+  def on_authentication_success(conn, credential_id, authenticator_metadata) do
+    :ets.update_element(
+      :wax_fido_test_user_keys,
+      {user_id(conn), credential_id},
+      {3, authenticator_metadata.sign_count}
+    )
+
     conn
+  end
+
+  defp user_id(%Plug.Conn{body_params: %{"username" => username}}) do
+    username
   end
 
   defp user_id(conn) do
     conn
     |> Plug.Conn.fetch_session()
     |> Plug.Conn.get_session(:user_id)
-  end
-
-  defp user_id(_conn, request) do
-    request.username
   end
 end

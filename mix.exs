@@ -37,7 +37,8 @@ defmodule WaxFidoTestSuiteServer.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:wax_api_rest, path: "../wax_api_rest"}
+      {:wax_api_rest, path: "../wax_api_rest"},
+      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false}
     ]
   end
 end
