@@ -22,8 +22,8 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :wax, :origin, "https://www.example.com"
-config :wax, :rp_id, :auto
+config :wax_, :origin, "https://www.example.com"
+config :wax_, :rp_id, :auto
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

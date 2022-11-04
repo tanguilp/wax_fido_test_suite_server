@@ -1,5 +1,9 @@
 # WaxFidoTestSuiteServer
 
+## Support
+
+OTP25+
+
 ## Configuration
 
 ### Enable TPM's test ID

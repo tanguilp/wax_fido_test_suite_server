@@ -47,6 +47,6 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-config :wax, :origin, "http://localhost:4000"
+config :wax_, :origin, "http://localhost:4000"
 
-config :wax, :metadata_dir, :wax_fido_test_suite_server
+config :wax_, :metadata_dir, "/home/tanguilp/coding/wax/metadata/metadata/metadataStatements/"
